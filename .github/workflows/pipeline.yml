@@ -33,6 +33,7 @@ jobs:
         run: |
           docker pull ubuntu:latest
           docker tag ubuntu:latest ${{ env.CONTAINER_REGISTRY }}/ubuntu:${{ github.ref_name }}
+          docker push ${{ env.CONTAINER_REGISTRY }}/ubuntu:${{ github.ref_name }}
             
   build:
     runs-on: ubuntu-latest
