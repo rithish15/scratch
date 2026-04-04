@@ -1,0 +1,47 @@
+
+name: Github CI Images Build And Push
+
+on:
+    push:
+        branches:
+            main
+
+env:
+  CONTAINER_REGISTRY: ghcr.io/${{ github.repository_owner }}
+
+jobs:
+  
+  docker-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+      LOG_LEVEL: "INFO"
+
+    strategy:
+      matrix:
+        images: 
+          - ubuntu
+    
+    steps:
+      - name: Log in to ${{ env.CONTAINER_REGISTRY }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build ${{ matrix.images }} Image and Push to ${{ env.CONTAINER_REGISTRY }}
+        run: |
+          docker pull ubuntu:latest
+          docker tag ubuntu:latest ${{ env.CONTAINER_REGISTRY }}/ubuntu:${{ github.ref_name }}
+            
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/ubuntu:${{ github.ref_name }}
+    
+    steps:
+      - name: Executing on ${{ env.CONTAINER_REGISTRY }}/ubuntu:${{ github.ref_name }}
+        run: cat /etc/os-release
+
+
+ 
