@@ -19,11 +19,6 @@ jobs:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
       LOG_LEVEL: "INFO"
-
-    strategy:
-      matrix:
-        images: 
-          - ubuntu
     
     steps:
       - name: Log in to ${{ env.CONTAINER_REGISTRY }}
