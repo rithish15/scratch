@@ -1,0 +1,36 @@
+name: Dynamic Matrix Example
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Python deps
+        run: pip install pyyaml
+
+      - name: Generate matrix
+        id: set-matrix
+        run: |
+          MATRIX=$(python generate_matrix.py repos.yaml)
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+
+  run-jobs:
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+
+    steps:
+      - name: Print ${{ matrix.repo }}
+        run: |
+          echo "Processing repo: ${{ matrix.repo }}"
