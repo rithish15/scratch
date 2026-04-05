@@ -88,3 +88,10 @@ jobs:
         with:
           sarif_file: reports/sample.sarif
           category: Secrets Scan
+        
+      - name: Add link to summary (filtered)
+        run: |
+          URL="https://github.com/${{ github.repository }}/security/code-scanning?query=tool%3ASecrets+Scan"
+      
+          echo "## ❗ Secret Scan Report" >> $GITHUB_STEP_SUMMARY
+          echo "[View Secret Scan Report]($URL)" >> $GITHUB_STEP_SUMMARY
