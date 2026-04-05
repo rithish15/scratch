@@ -1,4 +1,6 @@
 repos:
-  - test
-  - test1
-  - test2
+  - frontend
+  - backend
+  - api
+  - db
+  - queue

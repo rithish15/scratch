@@ -26,7 +26,8 @@ jobs:
   run-jobs:
     needs: generate-matrix
     runs-on: ubuntu-latest
-
+    concurrency: 2
+    
     strategy:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
 
